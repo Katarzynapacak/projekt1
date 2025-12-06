@@ -7,6 +7,8 @@
 class Game
 {
 public:
+    Game();
+
     const Paddle& getPaddle() const { return m_paletka; }
     const Ball& getBall()   const { return m_pilka; }
     const std::vector<Brick>& getBlocks() const { return m_bricks.getVector(); }
