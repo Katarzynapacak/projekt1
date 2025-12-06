@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 #include <vector>
 #include "Menu.h"
 #include "Game.h"
@@ -83,6 +84,7 @@ int main()
     const int SZEROKOSC = 800;
     const int WYSOKOSC = 600;
     const std::string SCORE_FILE = "wyniki.txt";
+    const std::filesystem::path SAVE_FILE = std::filesystem::absolute("zapis.txt");
 
     sf::RenderWindow window(
         sf::VideoMode(SZEROKOSC, WYSOKOSC),
@@ -130,21 +132,23 @@ int main()
                         }
                         else if (selected == 1) // Wczytaj gre
                         {
-                            GameState loaded;
-                            if (loaded.loadFromFile("zapis.txt"))
-                            {
-                                loaded.apply(
-                                    game.getPaddle(),
-                                    game.getBall(),
-                                    game.getBricks()
-                                );
-                                std::cout << "Gra wczytana!\n";
-                                currentState = GameStateEnum::Playing;
-                            }
-                            else
-                            {
-                                std::cout << "Brak pliku zapisu lub blad odczytu.\n";
-                            }
+                            
+                                GameState loaded;
+                                if (loaded.loadFromFile(SAVE_FILE.string()))
+                                {
+                                    
+                                        loaded.apply(
+                                            game.getPaddle(), 
+                                            game.getBall(), 
+                                            game.getBricks()
+                                        );
+                                        std::cout << "Gra wczytana!\n";
+                                        currentState = GameStateEnum::Playing;
+                                }
+                                    else
+                                    { 
+                                        std::cout << "Brak pliku zapisu lub blad odczytu (" << SAVE_FILE << ").\n";
+                                    }
                         }
                         else if (selected == 2) // Ostatnie wyniki
                         {
@@ -162,17 +166,17 @@ int main()
                 {
                     // Zapis gry na F5 i przejscie do pauzy
                     if (event.key.code == sf::Keyboard::F5)
-                    {
+                    { 
                         snapshot.capture(
                             game.getPaddle(),
                             game.getBall(),
                             game.getBlocks()
                         );
 
-                        if (snapshot.saveToFile("zapis.txt"))
-                            std::cout << "Gra zapisana!\n";
+                        if (snapshot.saveToFile(SAVE_FILE.string()))
+                            std::cout << "Gra zapisana! (" << SAVE_FILE << ")\n";
                         else
-                            std::cout << "Blad zapisu!\n";
+                            std::cout << "Blad zapisu (" << SAVE_FILE << ")\n";
 
                         currentState = GameStateEnum::Paused;
                     }
