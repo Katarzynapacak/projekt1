@@ -53,6 +53,12 @@ void Game::update(sf::Time dt)
     m_bricks.update(m_pilka);
 }
 
+bool Game::isBallOutOfBounds(float windowHeight) const
+{
+    const sf::FloatRect bounds = m_pilka.getGlobalBounds();
+    return bounds.top > windowHeight;
+}
+
 void Game::render(sf::RenderTarget& target)
 {
     m_paletka.draw(target);

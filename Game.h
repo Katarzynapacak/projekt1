@@ -12,16 +12,16 @@ public:
     const std::vector<Brick>& getBlocks() const { return m_bricks.getVector(); }
     int getDestroyedBricks() const { return m_bricks.getDestroyedCount(); }
     int getInitialBricks() const { return m_bricks.getInitialCount(); }
+    bool isBallOutOfBounds(float windowHeight) const;
 
     Paddle& getPaddle() { return m_paletka; }
     Ball& getBall() { return m_pilka; }
     Bricks& getBricks() { return m_bricks; }
 
-    Game();
     void reset();
-
-    void update(sf::Time dt);
-    void render(sf::RenderTarget& target);
+        
+        void update(sf::Time dt);
+        void render(sf::RenderTarget& target);
 
 private:
     Paddle m_paletka;

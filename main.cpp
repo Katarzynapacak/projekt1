@@ -172,6 +172,8 @@ int main()
                             std::cout << "Gra zapisana!\n";
                         else
                             std::cout << "Blad zapisu!\n";
+
+                        currentState = GameStateEnum::Menu;
                     }
 
                     if (event.key.code == sf::Keyboard::Escape)
@@ -192,7 +194,17 @@ int main()
 
         // UPDATE
         if (currentState == GameStateEnum::Playing)
+        {
             game.update(dt);
+
+            if (game.isBallOutOfBounds(static_cast<float>(window.getSize().y)))
+            {
+                scoreBoard.add(game.getDestroyedBricks());
+                scoreBoard.save(SCORE_FILE);
+                game.reset();
+                currentState = GameStateEnum::Menu;
+            }
+        }
 
         // RENDER
         window.clear(sf::Color(40, 30, 20));
