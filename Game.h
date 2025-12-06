@@ -10,10 +10,12 @@ public:
     const Paddle& getPaddle() const { return m_paletka; }
     const Ball& getBall()   const { return m_pilka; }
     const std::vector<Brick>& getBlocks() const { return m_bricks.getVector(); }
+    int getDestroyedBricks() const { return m_bricks.getDestroyedCount(); }
+    int getInitialBricks() const { return m_bricks.getInitialCount(); }
 
     Paddle& getPaddle() { return m_paletka; }
-    Ball& getBall() { return m_pilka; }
-    Bricks& getBricks() { return m_bricks; }
+        Ball& getBall() { return m_pilka; }
+        Bricks& getBricks() { return m_bricks; }
 
 
     Game();

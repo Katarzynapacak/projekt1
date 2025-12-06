@@ -3,20 +3,22 @@
 #include "Brick.h"
 #include "Ball.h"
 
-class Bricks : public Brick   
+class Bricks : public Brick
 {
 private:
     std::vector<Brick> bloki;
     float rozmiarX{};
     float rozmiarY{};
+    int m_poczatkowaLiczba{};
 
-public:
 public:
     const std::vector<Brick>& getVector() const { return bloki; }
     std::vector<Brick>& getVectorRef() { return bloki; }
+    int getDestroyedCount() const { return m_poczatkowaLiczba - static_cast<int>(bloki.size()); }
+    int getInitialCount() const { return m_poczatkowaLiczba; }
 
     Bricks()
-        : Brick({ 0.f, 0.f }, { 0.f, 0.f }, 0)   
+        : Brick({ 0.f, 0.f }, { 0.f, 0.f }, 0)
     {
     }
 
@@ -28,6 +30,8 @@ public:
         float odstep = 2.f;
         rozmiarX = (szerokoscOkna - (kolumny - 1) * odstep) / kolumny;
         rozmiarY = 20.f;
+
+        m_poczatkowaLiczba = kolumny * wiersze;
 
         for (int y = 0; y < wiersze; ++y)
         {

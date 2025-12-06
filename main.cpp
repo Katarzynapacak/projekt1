@@ -1,8 +1,73 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
 #include "Menu.h"
 #include "Game.h"
 #include "GameState.h"
+
+struct ScoreBoard
+{
+    std::vector<int> entries;
+
+    bool load(const std::string& filename)
+    {
+        entries.clear();
+
+        std::ifstream file(filename);
+        if (!file.is_open())
+            return false;
+
+        int value = 0;
+        while (file >> value)
+        {
+            entries.push_back(value);
+        }
+
+        return true;
+    }
+
+    bool save(const std::string& filename) const
+    {
+        std::ofstream file(filename);
+        if (!file.is_open())
+            return false;
+
+        for (const auto& v : entries)
+            file << v << "\n";
+
+        return true;
+    }
+
+    void add(int value)
+    {
+        entries.push_back(value);
+        const std::size_t MAX_RESULTS = 10;
+        if (entries.size() > MAX_RESULTS)
+            entries.erase(entries.begin(), entries.begin() + (entries.size() - MAX_RESULTS));
+    }
+
+    std::string formatForDisplay() const
+    {
+        std::ostringstream oss;
+        if (entries.empty())
+        {
+            oss << "Brak zapisanych wynikow.";
+        }
+        else
+        {
+            oss << "Ostatnie wyniki:\n";
+            for (std::size_t i = 0; i < entries.size(); ++i)
+            {
+                oss << (i + 1) << ". " << entries[i] << " zbitych bloczkow\n";
+            }
+        }
+
+        oss << "\nESC - powrot do menu";
+        return oss.str();
+    }
+};
 
 enum class GameStateEnum
 {
@@ -16,6 +81,7 @@ int main()
 {
     const int SZEROKOSC = 800;
     const int WYSOKOSC = 600;
+    const std::string SCORE_FILE = "wyniki.txt";
 
     sf::RenderWindow window(
         sf::VideoMode(SZEROKOSC, WYSOKOSC),
@@ -26,6 +92,8 @@ int main()
     Menu menu(window.getSize().x, window.getSize().y);
     Game game;
     GameState snapshot;
+    ScoreBoard scoreBoard;
+    scoreBoard.load(SCORE_FILE);
 
     GameStateEnum currentState = GameStateEnum::Menu;
 
@@ -106,7 +174,11 @@ int main()
                     }
 
                     if (event.key.code == sf::Keyboard::Escape)
+                    {
+                        scoreBoard.add(game.getDestroyedBricks());
+                        scoreBoard.save(SCORE_FILE);
                         currentState = GameStateEnum::Menu;
+                    }
                 }
                 // SCORES
                 else if (currentState == GameStateEnum::Scores)
@@ -133,13 +205,13 @@ int main()
             game.render(window);
         }
         else if (currentState == GameStateEnum::Scores)
-        {
+        { 
             sf::Font font;
             font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf");
 
             sf::Text txt;
             txt.setFont(font);
-            txt.setString("Tu beda ostatnie wyniki.\nESC - powrot do menu");
+            txt.setString(scoreBoard.formatForDisplay());
             txt.setCharacterSize(24);
             txt.setFillColor(sf::Color::White);
             txt.setPosition(40.f, 40.f);
