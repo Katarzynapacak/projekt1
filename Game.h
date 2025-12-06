@@ -14,11 +14,11 @@ public:
     int getInitialBricks() const { return m_bricks.getInitialCount(); }
 
     Paddle& getPaddle() { return m_paletka; }
-        Ball& getBall() { return m_pilka; }
-        Bricks& getBricks() { return m_bricks; }
-
+    Ball& getBall() { return m_pilka; }
+    Bricks& getBricks() { return m_bricks; }
 
     Game();
+    void reset();
 
     void update(sf::Time dt);
     void render(sf::RenderTarget& target);

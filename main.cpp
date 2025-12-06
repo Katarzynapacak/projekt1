@@ -124,6 +124,7 @@ int main()
 
                         if (selected == 0)      // Nowa gra
                         {
+                            game.reset();
                             currentState = GameStateEnum::Playing;
                         }
                         else if (selected == 1) // Wczytaj gre

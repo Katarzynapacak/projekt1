@@ -12,8 +12,19 @@ Game::Game()
         sf::Vector2f(-300.f, -300.f)
     )
 {
+    reset();
+}
+
+void Game::reset()
+{
     const int ILOSC_KOLUMN = 12;
     const int ILOSC_WIERSZY = 4;
+
+    m_paletka.setPosition(sf::Vector2f(SZEROKOSC / 2.f, WYSOKOSC - 30.f));
+
+    m_pilka.setPosition(sf::Vector2f(SZEROKOSC / 2.f, WYSOKOSC / 2.f));
+    m_pilka.setVelocity(sf::Vector2f(-300.f, -300.f));
+
     m_bricks.initGrid(ILOSC_KOLUMN, ILOSC_WIERSZY, static_cast<float>(SZEROKOSC));
 }
 
