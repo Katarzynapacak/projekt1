@@ -5,7 +5,7 @@
 #include <vector>
 #include "Menu.h"
 #include "Game.h"
-#include "GameState.h
+#include "GameState.h"
 
 struct ScoreBoard
 {
