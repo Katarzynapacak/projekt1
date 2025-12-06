@@ -2,11 +2,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <filesystem>
 #include <vector>
 #include "Menu.h"
 #include "Game.h"
-#include "GameState.h"
+#include "GameState.h
 
 struct ScoreBoard
 {
@@ -84,7 +83,7 @@ int main()
     const int SZEROKOSC = 800;
     const int WYSOKOSC = 600;
     const std::string SCORE_FILE = "wyniki.txt";
-    const std::filesystem::path SAVE_FILE = std::filesystem::absolute("zapis.txt");
+        const std::string SAVE_FILE = "zapis.txt";
 
     sf::RenderWindow window(
         sf::VideoMode(SZEROKOSC, WYSOKOSC),
@@ -134,7 +133,7 @@ int main()
                         {
                             
                                 GameState loaded;
-                                if (loaded.loadFromFile(SAVE_FILE.string()))
+                                if (loaded.loadFromFile(SAVE_FILE))
                                 {
                                     
                                         loaded.apply(
@@ -143,12 +142,12 @@ int main()
                                             game.getBricks()
                                         );
                                         std::cout << "Gra wczytana!\n";
-                                        currentState = GameStateEnum::Playing;
+                                            currentState = GameStateEnum::Playing;
                                 }
                                     else
-                                    { 
-                                        std::cout << "Brak pliku zapisu lub blad odczytu (" << SAVE_FILE << ").\n";
-                                    }
+                                        {
+                                            std::cout << "Brak pliku zapisu lub blad odczytu (" << SAVE_FILE << ").\n";
+                                        }
                         }
                         else if (selected == 2) // Ostatnie wyniki
                         {
@@ -173,9 +172,9 @@ int main()
                             game.getBlocks()
                         );
 
-                        if (snapshot.saveToFile(SAVE_FILE.string()))
+                        if (snapshot.saveToFile(SAVE_FILE))
                             std::cout << "Gra zapisana! (" << SAVE_FILE << ")\n";
-                        else
+                            else
                             std::cout << "Blad zapisu (" << SAVE_FILE << ")\n";
 
                         currentState = GameStateEnum::Paused;
