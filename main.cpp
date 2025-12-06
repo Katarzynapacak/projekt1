@@ -73,6 +73,7 @@ enum class GameStateEnum
 {
     Menu,
     Playing,
+    Paused,
     Scores,
     Exiting
 };
@@ -159,7 +160,7 @@ int main()
                 // PLAYING
                 else if (currentState == GameStateEnum::Playing)
                 {
-                    // Zapis gry na F5
+                    // Zapis gry na F5 i przejscie do pauzy
                     if (event.key.code == sf::Keyboard::F5)
                     {
                         snapshot.capture(
@@ -173,13 +174,27 @@ int main()
                         else
                             std::cout << "Blad zapisu!\n";
 
-                        currentState = GameStateEnum::Menu;
+                        currentState = GameStateEnum::Paused;
                     }
 
                     if (event.key.code == sf::Keyboard::Escape)
                     {
                         scoreBoard.add(game.getDestroyedBricks());
                         scoreBoard.save(SCORE_FILE);
+                        currentState = GameStateEnum::Menu;
+                    }
+                }
+                // PAUSED
+                else if (currentState == GameStateEnum::Paused)
+                {
+                    if (event.key.code == sf::Keyboard::F5)
+                    {
+                        // powrot do gry z zapisanym stanem
+                        currentState = GameStateEnum::Playing;
+                    }
+                    else if (event.key.code == sf::Keyboard::Escape)
+                    {
+                        // wyjscie do menu bez kasowania zapisu
                         currentState = GameStateEnum::Menu;
                     }
                 }
@@ -194,7 +209,7 @@ int main()
 
         // UPDATE
         if (currentState == GameStateEnum::Playing)
-        {
+        { 
             game.update(dt);
 
             if (game.isBallOutOfBounds(static_cast<float>(window.getSize().y)))
@@ -213,9 +228,25 @@ int main()
         {
             menu.draw(window);
         }
-        else if (currentState == GameStateEnum::Playing)
+        else if (currentState == GameStateEnum::Playing ||
+            currentState == GameStateEnum::Paused)
         {
             game.render(window);
+
+            if (currentState == GameStateEnum::Paused)
+            {
+                sf::Font font;
+                font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf");
+
+                sf::Text pausedText;
+                pausedText.setFont(font);
+                pausedText.setString("PAUZA\nF5 - powrot do gry\nESC - menu");
+                pausedText.setCharacterSize(24);
+                pausedText.setFillColor(sf::Color::White);
+                pausedText.setPosition(40.f, 40.f);
+
+                window.draw(pausedText);
+            }
         }
         else if (currentState == GameStateEnum::Scores)
         { 
